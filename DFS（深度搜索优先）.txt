@@ -1,0 +1,108 @@
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+
+#define Max 32767 //表示最大值
+#define MVNum 100 //最大顶点数
+
+typedef struct{
+	
+	char vexs[MVNum];//顶点表
+	int arcs[MVNum][MVNum];//邻接矩阵
+	int vexnum,arcnum;//图的当前点数与边数
+	
+}AMGraph;
+
+
+int LocateVex(AMGraph G,char v){//返回点下标
+	int i;
+	for(i=0;i<G.vexnum;i++)
+	{
+		if(v==G.vexs[i]) break;
+	}
+	
+	if(i>G.vexnum){
+		cout<<"no such vertex"<<endl;
+		return -1;
+	}
+	
+	return i;
+	
+}
+
+//构造邻接矩阵
+void CreateUDN(AMGraph &G){
+	
+	char v1,v2;
+	int i,j,w;
+	
+	//输入顶点数，边数
+	cout<<"请输入结点数"<<endl;
+	cin>>G.vexnum;
+	cout<<"请输入边数"<<endl;
+	cin>>G.arcnum;
+	
+	cout<<"请输入点的信息：";
+	//初始化顶点表
+	for(i=0;i<G.vexnum;i++){
+		cin>>G.vexs[i];
+	}
+	//初始化矩阵
+	for(i=0;i<G.vexnum;i++){
+		for(int j=0;j<G.vexnum;j++){
+			G.arcs[i][j]=Max;
+		}
+	}
+	
+	//构造矩阵
+	cout<<"请输入两个点及其边依附的权值"<<endl;
+	for(int k=0;k<G.arcnum;k++){
+		
+		cin>>v1>>v2>>w;
+		i=LocateVex(G,v1);
+		j=LocateVex(G,v2);
+		
+		G.arcs[i][j]=w;
+		G.arcs[j][i]=G.arcs[i][j];
+	}
+	
+	
+}
+
+
+void DFS_AM(AMGraph G,int v,bool visited[]){//从第v个顶点起深度搜索优先遍历图
+	int w;
+	cout<<"第"<<v+1<<"个顶点"<<G.vexs[v]<<endl;
+	
+	visited[v]=true;
+	
+
+	
+	for(w=0;w<G.vexnum;w++){//是该点的邻接点，且未被访问过\
+		cout<<"aaa"<<endl;
+		if((G.arcs[v][w]!=Max)&&(!visited[w]))
+		{	cout<<111;
+			DFS_AM(G,w,visited);
+			cout<<"ww"<<endl;
+		}
+		cout<<3;
+	}
+	
+	
+	
+}
+
+void main(){
+	
+	
+	bool visited[MVNum];//标识数组
+	for(int i=0;i<MVNum;i++){
+		visited[i]=false;
+
+	}
+	AMGraph G;
+	CreateUDN(G);
+//	ALGraph G=ALGraph(a,9);//初始化表头
+	DFS_AM(G,0,visited);	
+		
+}
